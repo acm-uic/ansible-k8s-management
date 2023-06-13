@@ -1,0 +1,3 @@
+---
+# Defaults for create_talos_cluster
+node_type: qemu

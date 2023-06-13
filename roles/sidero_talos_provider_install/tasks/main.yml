@@ -1,0 +1,26 @@
+---
+# Tasks for sidero_talos_provider_install
+- name: Create clusterctl config folder
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.cluster-api"
+    state: directory
+    mode: '0755'
+
+- name: Setup Siderolabs clusterctl provider repos
+  ansible.builtin.copy:
+    src: clusterctl.yaml
+    dest: "{{ ansible_env.HOME }}/.cluster-api/clusterctl.yaml"
+    mode: '0644'
+
+- name: Install Sidero and Talos Providers
+  ansible.builtin.shell:
+    cmd: "clusterctl init -b talos -c talos -i sidero"
+  environment:
+    SIDERO_CONTROLLER_MANAGER_HOST_NETWORK: true
+    SIDERO_CONTROLLER_MANAGER_API_ENDPOINT: "{{ ansible_facts['default_ipv4']['address']}}"
+  register: clusterctl_output
+  ignore_errors: true
+
+- name: Output install logs
+  ansible.builtin.debug:
+    var: clusterctl_output

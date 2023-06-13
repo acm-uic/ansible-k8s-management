@@ -1,0 +1,7 @@
+---
+- name: Download & install kubectl
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ lookup('ansible.builtin.url', 'https://dl.k8s.io/release/stable.txt', split_lines=False) }}/bin/{{ ansible_facts['system'] | lower }}/{{ architecture | lower }}/kubectl"
+    dest: /usr/local/bin/kubectl
+    mode: '0755'
+  become: true

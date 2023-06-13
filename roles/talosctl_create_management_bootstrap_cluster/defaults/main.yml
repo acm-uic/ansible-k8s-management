@@ -1,0 +1,5 @@
+---
+# Default variables for talosctl_create_cluster21
+kubernetes_version: '1.27.1'
+sidero_controller_name: 'sidero-controller'
+talos_version: '1.4.1'

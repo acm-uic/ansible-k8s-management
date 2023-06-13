@@ -1,0 +1,13 @@
+---
+- name: Local Provisioning of Sidero
+  hosts: localhost
+  roles:
+    - talosctl_install
+    - kubectl_install
+    - clusterctl_install
+    - talosctl_create_management_bootstrap_cluster
+    - sidero_talos_provider_install
+    - role: create_talos_cluster
+      vars:
+        cluster_name: "k8s"
+        base_domain: "acmuic.org"

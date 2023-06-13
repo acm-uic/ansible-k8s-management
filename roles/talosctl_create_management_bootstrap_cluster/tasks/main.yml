@@ -1,0 +1,40 @@
+---
+# Tasks file for talosctl_create_management_bootstrap_cluster
+- name: Ensure Docker is available
+  ansible.builtin.command: docker --version
+  register: docker_check
+
+- name: Add user to Docker group
+  ansible.builtin.user:
+    user: "{{ ansible_facts['user_id'] }}"
+    groups: docker
+    append: true
+  become: true
+
+- name: Debug
+  ansible.builtin.debug:
+    var: ansible_facts
+
+- name: Create control cluster
+  ansible.builtin.command:
+    cmd: "talosctl cluster create --name {{ sidero_controller_name }} --kubernetes-version {{ kubernetes_version }} -p 69:69/udp,8081:8081/tcp,51821:51821/udp --workers 0 --config-patch '[{\"op\": \"add\", \"path\": \"/cluster/allowSchedulingOnMasters\", \"value\": true}]' --endpoint {{ ansible_facts['default_ipv4']['address']}}"
+    creates: "{{ ansible_env.HOME }}/.talos/config"
+  register: control_cluster_output
+
+- name: Output cluster creation process
+  ansible.builtin.debug:
+    var: control_cluster_output
+  when: control_cluster_output is defined
+
+- name: Retrieve kubeconfig for local management cluster
+  ansible.builtin.command:
+    cmd: "talosctl kubeconfig kubeconfig.yml -n {{ ansible_facts['default_ipv4']['address'] }}"
+    creates: kubeconfig.yml
+
+- name: Ensure cluster is running
+  community.docker.docker_container:
+    name: "{{ sidero_controller_name }}-controlplane-1"
+    image: "ghcr.io/siderolabs/talos:v{{ talos_version }}"
+    state: started
+    restart: true
+  ignore_errors: true

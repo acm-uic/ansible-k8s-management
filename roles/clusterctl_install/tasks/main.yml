@@ -1,0 +1,8 @@
+---
+- name: Download & install clusterctl
+  ansible.builtin.get_url:
+    url: "https://github.com/talos-systems/talos/releases/latest/download/clusterctl-{{ ansible_facts['system'] | lower }}-{{ architecture | lower }}"
+    url: "https://github.com/kubernetes-sigs/cluster-api/releases/download/v{{ clusterctl_version }}/clusterctl-{{ ansible_facts['system'] | lower }}-{{ architecture | lower }}"
+    dest: /usr/local/bin/clusterctl
+    mode: '0755'
+  become: true
