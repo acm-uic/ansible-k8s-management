@@ -14,7 +14,7 @@
 
 - name: Install Sidero and Talos Providers
   ansible.builtin.shell:
-    cmd: "clusterctl init -b talos -c talos -i sidero"
+    cmd: "clusterctl init -b talos -c talos -i sidero --kubeconfig kubeconfig.yml"
   environment:
     SIDERO_CONTROLLER_MANAGER_HOST_NETWORK: true
     SIDERO_CONTROLLER_MANAGER_API_ENDPOINT: "{{ ansible_facts['default_ipv4']['address']}}"
