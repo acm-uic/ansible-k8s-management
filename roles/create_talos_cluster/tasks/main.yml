@@ -7,9 +7,11 @@
     CONTROL_PLANE_ENDPOINT: "{{ cluster_name }}.{{ base_domain }}"
     CONTROL_PLANE_PORT: 6443
     CONTROL_PLANE_SERVERCLASS: "{{ node_type }}"
+    CONTROL_PLANE_MACHINE_COUNT: 1
     KUBERNETES_VERSION: "v1.25.10"
     TALOS_VERSION: "v1.4"
     WORKER_SERVERCLASS: "{{ node_type }}"
+    WORKER_MACHINE_COUNT: 0
     GITHUB_TOKEN: "{{ GITHUB_TOKEN }}"
 
 - name: Generate Serverclass VM types
@@ -24,4 +26,9 @@
 - name: Apply cluster manifest to management cluster
   ansible.builtin.command:
     cmd: "kubectl apply -f {{ cluster_name }}-manifest.yaml"
+
+- name: Retrieve Talosconfig
+  ansible.builtin.shell:
+    cmd: "kubectl get secret {{ cluster_name }}-talosconfig -o jsonpath='{.data.talosconfig}' | base64 -d > {{ cluster_name }}-talosconfig"
+
 
