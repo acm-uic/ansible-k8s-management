@@ -1,7 +1,7 @@
 ---
 - name: Create new cluster manifest
   ansible.builtin.shell:
-    cmd: "clusterctl generate cluster {{ cluster_name }} -i sidero > {{ cluster_name }}-manifest.yaml"
+    cmd: "clusterctl generate cluster {{ cluster_name }} -i sidero --kubeconfig kubeconfig.yml > {{ cluster_name }}-manifest.yaml"
     creates: "{{ cluster_name }}-manifest.yaml"
   environment:
     CONTROL_PLANE_ENDPOINT: "{{ cluster_name }}.{{ base_domain }}"
@@ -21,14 +21,14 @@
 
 - name: Apply Serverclass to management cluster
   ansible.builtin.command:
-    cmd: "kubectl apply -f {{ node_type }}-serverclass.yml"
+    cmd: "kubectl --kubeconfig kubeconfig.yml apply -f {{ node_type }}-serverclass.yml"
 
 - name: Apply cluster manifest to management cluster
   ansible.builtin.command:
-    cmd: "kubectl apply -f {{ cluster_name }}-manifest.yaml"
+    cmd: "kubectl --kubeconfig kubeconfig.yml apply -f {{ cluster_name }}-manifest.yaml"
 
 - name: Retrieve Talosconfig
   ansible.builtin.shell:
-    cmd: "kubectl get secret {{ cluster_name }}-talosconfig -o jsonpath='{.data.talosconfig}' | base64 -d > {{ cluster_name }}-talosconfig"
+    cmd: "kubectl --kubeconfig kubeconfig.yml get secret {{ cluster_name }}-talosconfig -o jsonpath='{.data.talosconfig}' | base64 -d > {{ cluster_name }}-talosconfig"
 
 
