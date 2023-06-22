@@ -7,11 +7,11 @@
     CONTROL_PLANE_ENDPOINT: "{{ cluster_name }}.{{ base_domain }}"
     CONTROL_PLANE_PORT: 6443
     CONTROL_PLANE_SERVERCLASS: "{{ node_type }}"
-    CONTROL_PLANE_MACHINE_COUNT: 1
+    CONTROL_PLANE_MACHINE_COUNT: 3
     KUBERNETES_VERSION: "v1.25.10"
     TALOS_VERSION: "v1.4"
     WORKER_SERVERCLASS: "{{ node_type }}"
-    WORKER_MACHINE_COUNT: 0
+    WORKER_MACHINE_COUNT: 3
     GITHUB_TOKEN: "{{ GITHUB_TOKEN }}"
 
 - name: Generate Serverclass VM types
