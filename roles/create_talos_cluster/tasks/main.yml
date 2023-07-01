@@ -31,4 +31,8 @@
   ansible.builtin.shell:
     cmd: "kubectl --kubeconfig kubeconfig.yml get secret {{ cluster_name }}-talosconfig -o jsonpath='{.data.talosconfig}' | base64 -d > {{ cluster_name }}-talosconfig"
 
+- name: Retrieve Kubeconfig
+  ansible.builtin.shell:
+    cmd: "kubectl --kubeconfig kubeconfig.yml get secret {{ cluster_name }}-kubeconfig -o jsonpath='{.data.value}' | base64 -d > {{ cluster_name }}-kubeconfig"
+
 
