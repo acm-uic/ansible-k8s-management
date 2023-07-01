@@ -1,6 +1,8 @@
 ---
 - name: Local Provisioning of Sidero
   hosts: localhost
+  vars:
+    GITHUB_TOKEN: "{{ lookup('env', 'GITHUB_TOKEN') }}"
   roles:
     - talosctl_install
     - kubectl_install
